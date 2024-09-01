@@ -1,0 +1,34 @@
+body,
+html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+}
+
+#game {
+    width: 70vw;
+    height: 70vh;
+    border: 2px dashed white;
+    background-color: aqua;
+}
+
+#player {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: red;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-eye {
+    background-color: white;
+    width: 10px;
+    height: 10px;
+    margin: 0px 5px;
+    border-radius: 25px;
+    color: black;
+}
