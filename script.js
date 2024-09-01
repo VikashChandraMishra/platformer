@@ -1,13 +1,12 @@
-const log = document.getElementById('log');
 const game = document.getElementById('game');
 const player = document.getElementById('player');
 const gameBoundary = game.getBoundingClientRect();
 let isJumping = false;
+let hasPlayerLanded = false;
 let gravity = 0.9;
 let velocityY = 0;
 let velocityX = 0;
-let isOnPlatform = false;
-let a = 0;
+
 const keys = {
     right: false,
     left: false
@@ -22,7 +21,6 @@ document.addEventListener('keydown', (event) => {
     }
     if (event.key === ' ' && !isJumping) {
         isJumping = true;
-        isOnPlatform = false;
         velocityY = -25;
     }
 });
@@ -70,30 +68,36 @@ function getRectInfoOfAllPlatforms(platforms) {
     return platforms.map((platform) => (platform.getBoundingClientRect()));
 }
 
+function isPlayerOnPlatform(playerBoundary, platformArea) {
+    return playerBoundary.right >= (platformArea.left + 10)
+        &&
+        playerBoundary.left <= platformArea.right
+        &&
+        playerBoundary.bottom >= platformArea.top
+        &&
+        playerBoundary.top <= platformArea.bottom;
+}
+
 function detectCollision(platformAreas) {
     let playerBoundary = player.getBoundingClientRect();
+    let collision = false;
+
     for (let index = 0; index < platformAreas.length; index++) {
         const platformArea = platformAreas[index];
-        if (
-            !isOnPlatform
-            &&
-            playerBoundary.right >= (platformArea.left + 10)
-            &&
-            playerBoundary.left <= platformArea.right
-            &&
-            playerBoundary.bottom >= platformArea.top
-            &&
-            playerBoundary.top <= platformArea.bottom
-        ) {
-            player.style.top = `${platformArea.top - 50}px`;
-            isOnPlatform = true;
-            isJumping = false;
-            velocityY = 0;
+        if (isPlayerOnPlatform(playerBoundary, platformArea)) {
+            collision = true;
+            if (!hasPlayerLanded) {
+                player.style.top = `${platformArea.top - 50}px`;
+                isJumping = false;
+                velocityY = 0;
+                hasPlayerLanded = true;
+            }
             break;
-        } else {
-            isOnPlatform = false;
-            isJumping = true;
         }
+    }
+    if (!collision) {
+        isJumping = true;
+        hasPlayerLanded = false;
     }
 }
 
