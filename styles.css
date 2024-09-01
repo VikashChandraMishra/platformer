@@ -9,7 +9,41 @@ html {
     justify-content: center;
 }
 
+/* Play Button */
+#play-button {
+    position: absolute;
+    padding: 15px 30px;
+    font-size: 24px;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+#play-button:hover {
+    background-color: #0056b3;
+}
+
+#play-button:focus {
+    outline: none;
+}
+
+#points-container {
+    display: flex;
+    justify-content: space-around;
+    width: 200px;
+    border: 2px dotted gold;
+    color: white;
+    font-size: 1.5rem;
+    font-family: monospace;
+    font-weight: 700;
+}
+
 #game-container {
+    display: none;
     position: relative;
     width: fit-content;
 }

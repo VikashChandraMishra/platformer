@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Platformer</title>
+    <title>Platformer Game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -14,11 +14,13 @@
         Your browser does not support the audio element.
     </audio>
 
+    <button id="play-button">Play</button>
     <div id="game-container">
-        <div style="color: red; font-size: 2rem; font-weight: 700;">Coins Consumed:
-            <span id="points"></span>
-        </div>
         <div id="game">
+            <div id="points-container">
+                <span>Coins</span>
+                <span id="points"></span>
+            </div>
             <div id="player">
                 <div class="player-eye"></div>
                 <div class="player-eye"></div>

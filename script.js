@@ -1,5 +1,7 @@
 const bgm = document.getElementById('bgm');
+const playButton = document.getElementById('play-button');
 const points = document.getElementById('points');
+const gameContainer = document.getElementById('game-container');
 const game = document.getElementById('game');
 const player = document.getElementById('player');
 let platforms = [], coins = [];
@@ -18,6 +20,15 @@ const keys = {
 
 bgm.addEventListener('canplaythrough', () => {
     bgm.play();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    playButton.addEventListener('click', () => {
+        gameContainer.style.display = 'block';
+        playButton.style.display = 'none'; 
+        init();
+    });
 });
 
 document.addEventListener('keydown', (event) => {
@@ -169,5 +180,3 @@ function update() {
 
     requestAnimationFrame(update);
 }
-
-init();
