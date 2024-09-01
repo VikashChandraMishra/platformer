@@ -1,16 +1,24 @@
+const bgm = document.getElementById('bgm');
+const points = document.getElementById('points');
 const game = document.getElementById('game');
 const player = document.getElementById('player');
-let platforms = [];
+let platforms = [], coins = [];
 let isJumping = false;
 let hasPlayerLanded = false;
 let gravity = 1;
 let velocityY = 0;
 let velocityX = 0;
+let coinsConsumed = 0;
+points.innerText = coinsConsumed;
 
 const keys = {
     right: false,
     left: false
 };
+
+bgm.addEventListener('canplaythrough', () => {
+    bgm.play();
+});
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowRight') {
@@ -43,13 +51,9 @@ function createPlatforms(number) {
     let platforms = [];
     for (let index = 0; index < number; index++) {
         const platform = document.createElement('div');
-        platform.style.position = 'absolute';
+        platform.classList.add('platform');
         platform.style.left = `${startingHorizontalPositionForPlatforms}px`;
         platform.style.top = `${startingVerticalPositionForPlatforms + generatePlatformHeight() * 5}px`;
-        platform.style.border = '2px solid orange';
-        platform.style.backgroundColor = 'brown';
-        platform.style.width = '200px';
-        platform.style.height = '20px';
         game.appendChild(platform);
         platforms.push(platform);
         startingHorizontalPositionForPlatforms += 250;
@@ -57,11 +61,37 @@ function createPlatforms(number) {
     return platforms;
 }
 
+function createCoins(number) {
+    let startingHorizontalPositionForCoins = 100, startingVerticalPositionForCoins = 100;
+    let coins = [];
+    for (let index = 0; index < number; index++) {
+        const coin = document.createElement('div');
+        coin.classList.add('coin');
+        coin.style.left = `${startingHorizontalPositionForCoins}px`;
+        coin.style.top = `${startingVerticalPositionForCoins + generatePlatformHeight() * 5}px`;
+        game.appendChild(coin);
+        coins.push(coin);
+        startingHorizontalPositionForCoins += 250;
+    }
+    return coins;
+}
+
 function init() {
     player.style.left = `${game.offsetLeft + game.offsetWidth / 2}px`;
     player.style.top = `${game.offsetHeight - game.offsetTop - 2 * player.offsetHeight}px`;
     platforms = createPlatforms(100);
+    coins = createCoins(100);
     update();
+}
+
+function hasPlayerCollidedWithCoin(coin) {
+    return player.offsetLeft + player.offsetWidth >= coin.offsetLeft
+        &&
+        player.offsetLeft <= coin.offsetLeft + coin.offsetWidth
+        &&
+        player.offsetTop + player.offsetHeight >= coin.offsetTop
+        &&
+        player.offsetTop <= coin.offsetTop + coin.offsetHeight;
 }
 
 function isPlayerOnPlatform(platform) {
@@ -72,6 +102,17 @@ function isPlayerOnPlatform(platform) {
         player.offsetTop + player.offsetHeight >= platform.offsetTop
         &&
         player.offsetTop <= platform.offsetTop + platform.offsetHeight;
+}
+
+function consumeCoin() {
+    for (const coin of coins) {
+        if (hasPlayerCollidedWithCoin(coin)) {
+            game.removeChild(coin);
+            coinsConsumed++;
+            points.innerText = coinsConsumed;
+            return;
+        }
+    }
 }
 
 function detectCollision() {
@@ -95,6 +136,12 @@ function detectCollision() {
     }
 }
 
+function moveCoins(x) {
+    for (const coin of coins) {
+        coin.style.left = `${coin.offsetLeft + x}px`;
+    }
+}
+
 function movePlatforms(x) {
     for (const platform of platforms) {
         platform.style.left = `${platform.offsetLeft + x}px`;
@@ -102,6 +149,7 @@ function movePlatforms(x) {
 }
 
 function update() {
+    consumeCoin();
     detectCollision();
     if (keys.right) {
         velocityX = -5;
@@ -110,7 +158,10 @@ function update() {
     } else {
         velocityX = 0;
     }
+
+    moveCoins(velocityX);
     movePlatforms(velocityX);
+
     velocityY += gravity;
     if (isJumping && (player.offsetTop + player.offsetHeight + velocityY) < (game.offsetHeight + game.offsetTop)) {
         player.style.top = `${player.offsetTop + velocityY}px`;

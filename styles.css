@@ -25,18 +25,105 @@ html {
     position: absolute;
     width: 50px;
     height: 50px;
-    background-color: red;
-    border-radius: 20px;
+    background-color: #FF4500;
+    /* Bright red-orange for a more vibrant look */
+    border-radius: 50%;
+    /* Perfect circle */
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    /* Add some depth with shadow */
+    overflow: hidden;
+    /* Hide overflow for inner effects */
+    animation: bounce 1s infinite;
+    /* Simple bounce animation */
 }
 
+/* Player Eye */
 .player-eye {
     background-color: white;
     width: 10px;
     height: 10px;
-    margin: 0px 5px;
-    border-radius: 25px;
-    color: black;
+    border-radius: 50%;
+    position: relative;
+}
+
+/* Add a black pupil inside the eye */
+.player-eye::before {
+    content: '';
+    background-color: black;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+}
+
+/* Slight shine effect */
+#player::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    width: 15px;
+    height: 15px;
+    background-color: rgba(255, 255, 255, 0.3);
+    /* Semi-transparent white */
+    border-radius: 50%;
+    filter: blur(2px);
+    /* Blur the shine for a subtle glow */
+}
+
+/* Bounce animation */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+
+.platform {
+    position: absolute;
+    width: 200px;
+    height: 20px;
+    background-color: #8B4513;
+    background-image: linear-gradient(45deg, #8B4513 25%, #A0522D 25%, #A0522D 50%, #8B4513 50%, #8B4513 75%, #A0522D 75%, #A0522D 100%);
+    background-size: 40px 40px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes spin2D {
+    0% {
+        background: radial-gradient(circle at 50% 50%, gold, orange);
+        transform: scaleX(1);
+    }
+
+    50% {
+        background: radial-gradient(circle at 50% 50%, orange, gold);
+        transform: scaleX(0.1);
+    }
+
+    100% {
+        background: radial-gradient(circle at 50% 50%, gold, orange);
+        transform: scaleX(1);
+    }
+}
+
+.coin {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 50% 50%, gold, orange);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    animation: spin2D 1s linear infinite;
 }
