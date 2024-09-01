@@ -4,13 +4,19 @@ html {
     padding: 0;
     overflow: hidden;
     height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#game-container {
+    position: relative;
+    width: fit-content;
 }
 
 #game {
     width: 73vw;
     height: 80vh;
-    border: 2px dashed white;
-    background-color: aqua;
     background: url(/assets/platformer-bg.webp) no-repeat center center;
     background-size: contain;
 }
