@@ -4,7 +4,7 @@ const points = document.getElementById('points');
 const gameContainer = document.getElementById('game-container');
 const game = document.getElementById('game');
 const player = document.getElementById('player');
-let platforms = [], coins = [];
+let platforms = [], coins = [], enemies = [];
 let isJumping = false;
 let hasPlayerLanded = false;
 let gravity = 1;
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     playButton.addEventListener('click', () => {
         gameContainer.style.display = 'block';
-        playButton.style.display = 'none'; 
+        playButton.style.display = 'none';
         init();
     });
 });
@@ -87,11 +87,76 @@ function createCoins(number) {
     return coins;
 }
 
-function init() {
+function createEnemies(number) {
+    let startingHorizontalPositionForEnemies = 150, startingVerticalPositionForEnemies = 100;
+    let enemies = [];
+    for (let index = 0; index < number; index++) {
+        const enemy = document.createElement('img');
+        enemy.src = './assets/enemy.png';
+        enemy.classList.add('enemy');
+        enemy.style.left = `${startingHorizontalPositionForEnemies}px`;
+        enemy.style.top = `${startingVerticalPositionForEnemies + generatePlatformHeight() * 5}px`;
+        game.appendChild(enemy);
+        enemies.push(enemy);
+        startingHorizontalPositionForEnemies += 300;
+    }
+    return enemies;
+}
+
+function hasPlayerCollidedWithEnemy(enemy) {
+    return player.offsetLeft + player.offsetWidth >= enemy.offsetLeft
+        &&
+        player.offsetLeft <= enemy.offsetLeft + enemy.offsetWidth
+        &&
+        player.offsetTop + player.offsetHeight >= enemy.offsetTop
+        &&
+        player.offsetTop <= enemy.offsetTop + enemy.offsetHeight;
+}
+
+function detectEnemyCollision() {
+    for (const enemy of enemies) {
+        if (hasPlayerCollidedWithEnemy(enemy)) {
+            resetGame();
+            return;
+        }
+    }
+}
+
+function calculateEnemyMovement() {
+    const positiveXDirection = parseInt(Math.random() * 100) > 50;
+    const positiveYDirection = parseInt(Math.random() * 100) > 50;
+    let x = 0, y = 0;
+
+    if (positiveXDirection) x = parseInt(Math.random() * 5);
+    else x = -parseInt(Math.random() * 5);
+
+    if (positiveYDirection) y = parseInt(Math.random() * 5);
+    else y = -parseInt(Math.random() * 5);
+
+    return { x, y };
+};
+
+function moveEnemies() {
+    for (const enemy of enemies) {
+        const movement = calculateEnemyMovement();
+        enemy.style.left = `${enemy.offsetLeft - 3}px`;
+        enemy.style.top = `${enemy.offsetTop + movement.y}px`;
+    }
+}
+
+function resetGame() {
     player.style.left = `${game.offsetLeft + game.offsetWidth / 2}px`;
     player.style.top = `${game.offsetHeight - game.offsetTop - 2 * player.offsetHeight}px`;
+    coinsConsumed = 0;
+    points.innerText = coinsConsumed;
+}
+
+function init() {
+    player.style.left = `${game.offsetLeft + game.offsetWidth / 2}px`;
+    player.style.top = `${game.offsetHeight + game.offsetTop - 2 * player.offsetHeight}px`;
     platforms = createPlatforms(100);
     coins = createCoins(100);
+    enemies = createEnemies(100);
     update();
 }
 
@@ -162,6 +227,8 @@ function movePlatforms(x) {
 function update() {
     consumeCoin();
     detectCollision();
+    detectEnemyCollision();
+
     if (keys.right) {
         velocityX = -5;
     } else if (keys.left) {
@@ -172,6 +239,7 @@ function update() {
 
     moveCoins(velocityX);
     movePlatforms(velocityX);
+    moveEnemies();
 
     velocityY += gravity;
     if (isJumping && (player.offsetTop + player.offsetHeight + velocityY) < (game.offsetHeight + game.offsetTop)) {
