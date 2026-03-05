@@ -4,29 +4,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platformer Game</title>
+    <title>Platformer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <audio id="bgm" loop>
         <source src="assets/bgm.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
     </audio>
 
-    <button id="play-button">Play</button>
+    <!-- Landing Screen -->
+    <div id="landing">
+        <div id="landing-ground"></div>
+
+        <!-- Platforms -->
+        <div class="platform" style="left: 3%; bottom: 18%"></div>
+        <div class="platform" style="left: 29%; bottom: 40%"></div>
+        <div class="platform" style="left: 55%; bottom: 27%"></div>
+        <div class="platform" style="left: 77%; bottom: 49%"></div>
+
+        <!-- Coins -->
+        <div class="coin" style="left: calc(3% + 40px); bottom: calc(18% + 32px)"></div>
+        <div class="coin" style="left: calc(3% + 120px); bottom: calc(18% + 32px)"></div>
+        <div class="coin" style="left: calc(55% + 80px); bottom: calc(27% + 32px)"></div>
+        <div class="coin" style="left: calc(77% + 55px); bottom: calc(49% + 32px)"></div>
+        <div class="coin" style="left: calc(77% + 130px); bottom: calc(49% + 32px)"></div>
+
+        <!-- Player sitting on the center-left platform -->
+        <div id="landing-player" style="left: calc(29% + 75px); bottom: calc(40% + 20px)">
+            <div class="player-eye"></div>
+            <div class="player-eye"></div>
+        </div>
+
+        <!-- Title card -->
+        <div id="landing-card">
+            <h1 id="game-title">PLATFORMER</h1>
+            <p id="game-subtitle">Collect coins &nbsp;·&nbsp; Jump high &nbsp;·&nbsp; Don't fall</p>
+            <button id="play-button">&#9654;&nbsp; Play</button>
+        </div>
+    </div>
+
+    <!-- Game -->
     <div id="game-container">
         <div id="game">
+            <div id="ground"></div>
             <div id="points-container">
-                <span>Coins</span>
-                <span id="points"></span>
+                <span>Coins <span id="points">0</span></span>
+                <span id="lives-display"></span>
             </div>
             <div id="player">
                 <div class="player-eye"></div>
                 <div class="player-eye"></div>
             </div>
+            <div id="game-over">
+                <h2 id="game-over-title">GAME OVER</h2>
+                <p id="final-score"></p>
+                <button id="restart-button">Play Again</button>
+            </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 

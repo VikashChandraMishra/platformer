@@ -7,24 +7,138 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Figtree', monospace;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+        url(/assets/platformer-bg.webp) no-repeat center center / cover;
+}
+
+/* ===== LANDING SCREEN ===== */
+
+#landing {
+    position: fixed;
+    inset: 0;
+    background: url(/assets/platformer-bg.webp) no-repeat center center / cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Vignette overlay */
+#landing::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 25%, rgba(0, 0, 0, 0.55) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#landing-ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background-color: #8B4513;
+    background-image: linear-gradient(45deg, #8B4513 25%, #A0522D 25%, #A0522D 50%, #8B4513 50%, #8B4513 75%, #A0522D 75%, #A0522D 100%);
+    background-size: 40px 40px;
+    box-shadow: 0 -5px 0 #5C2E00;
+    z-index: 1;
+}
+
+/* Landing decorative elements (platforms, coins) are absolutely
+   positioned within #landing via inline styles */
+#landing .platform,
+#landing .coin {
+    position: absolute;
+    z-index: 1;
+}
+
+#landing-player {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #FF4500;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: bounce 1s infinite;
+    z-index: 2;
+}
+
+#landing-player::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    width: 15px;
+    height: 15px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    filter: blur(2px);
+}
+
+#landing-card {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    background: rgba(8, 4, 24, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-radius: 24px;
+    padding: 52px 80px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 28px 72px rgba(0, 0, 0, 0.6);
+    color: white;
+}
+
+#game-title {
+    font-family: 'Figtree', monospace;
+    font-size: clamp(2.8rem, 6vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    margin: 0 0 10px 0;
+    color: gold;
+    text-shadow: 0 0 40px rgba(255, 215, 0, 0.55), 3px 3px 0 rgba(0, 0, 0, 0.55);
+}
+
+#game-subtitle {
+    font-family: 'Figtree', monospace;
+    font-size: 1rem;
+    margin: 0 0 40px 0;
+    color: rgba(255, 255, 255, 0.65);
+    letter-spacing: 0.03em;
 }
 
 /* Play Button */
 #play-button {
-    position: absolute;
-    padding: 15px 30px;
-    font-size: 24px;
+    padding: 14px 48px;
+    font-family: 'Figtree', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
     color: #fff;
-    background-color: #007BFF;
+    background: linear-gradient(135deg, #1a8aff, #0056cc);
     border: none;
-    border-radius: 12px;
+    border-radius: 14px;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 6px 24px rgba(0, 100, 255, 0.45);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    letter-spacing: 0.04em;
 }
 
 #play-button:hover {
-    background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0, 100, 255, 0.55);
+}
+
+#play-button:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 12px rgba(0, 100, 255, 0.3);
 }
 
 #play-button:focus {
@@ -32,14 +146,27 @@ html {
 }
 
 #points-container {
+    position: absolute;
+    top: 12px;
+    left: 12px;
     display: flex;
-    justify-content: space-around;
-    width: 200px;
+    gap: 20px;
+    align-items: center;
+    padding: 6px 14px;
     border: 2px dotted gold;
+    border-radius: 8px;
     color: white;
-    font-size: 1.5rem;
-    font-family: monospace;
+    font-size: 1.2rem;
+    font-family: 'Figtree', monospace;
     font-weight: 700;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 10;
+}
+
+#lives-display {
+    color: #FF6B6B;
+    letter-spacing: 4px;
+    font-size: 1.1rem;
 }
 
 #game-container {
@@ -51,8 +178,15 @@ html {
 #game {
     width: 73vw;
     height: 80vh;
-    background: url(/assets/platformer-bg.webp) no-repeat center center;
-    background-size: contain;
+    background: url(/assets/platformer-bg.webp) no-repeat center center / cover;
+    border: 5px solid rgba(255, 255, 255, 0.92);
+    border-radius: 6px;
+    box-sizing: border-box;
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.6),
+        0 0 32px rgba(255, 255, 255, 0.15),
+        0 24px 64px rgba(0, 0, 0, 0.8);
+    overflow: visible;
 }
 
 #player {
@@ -60,18 +194,12 @@ html {
     width: 50px;
     height: 50px;
     background-color: #FF4500;
-    /* Bright red-orange for a more vibrant look */
     border-radius: 50%;
-    /* Perfect circle */
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    /* Add some depth with shadow */
     overflow: hidden;
-    /* Hide overflow for inner effects */
-    animation: bounce 1s infinite;
-    /* Simple bounce animation */
 }
 
 /* Player Eye */
@@ -93,6 +221,14 @@ html {
     position: absolute;
     top: 3px;
     left: 3px;
+    animation: glance 4s ease-in-out infinite;
+}
+
+@keyframes glance {
+    0%, 20%  { transform: translateX(0); }
+    30%, 45% { transform: translateX(-2px); }
+    55%, 70% { transform: translateX(2px); }
+    80%, 100% { transform: translateX(0); }
 }
 
 /* Slight shine effect */
@@ -123,6 +259,25 @@ html {
     }
 }
 
+
+/* ===== GROUND ===== */
+
+#ground {
+    position: absolute;
+    left: 0;
+    right: 0;
+    /* bottom: -200px means bottom edge is 200px below game bottom.
+       height: 250px means top edge is 50px above game bottom (inside game). */
+    bottom: -200px;
+    height: 250px;
+    z-index: 1;
+    /* Staggered brick pattern via inline SVG data URI */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='64'%3E%3Crect width='128' height='64' fill='%232A0A0A'/%3E%3Crect x='1' y='1' width='61' height='28' fill='%23B83228'/%3E%3Crect x='1' y='1' width='61' height='8' fill='%23CC4035'/%3E%3Crect x='66' y='1' width='61' height='28' fill='%23B83228'/%3E%3Crect x='66' y='1' width='61' height='8' fill='%23CC4035'/%3E%3Crect x='1' y='33' width='29' height='28' fill='%23B83228'/%3E%3Crect x='1' y='33' width='29' height='8' fill='%23CC4035'/%3E%3Crect x='34' y='33' width='61' height='28' fill='%23B83228'/%3E%3Crect x='34' y='33' width='61' height='8' fill='%23CC4035'/%3E%3Crect x='99' y='33' width='28' height='28' fill='%23B83228'/%3E%3Crect x='99' y='33' width='28' height='8' fill='%23CC4035'/%3E%3C/svg%3E");
+    background-size: 128px 64px;
+    background-color: #2A0A0A;
+    border-top: 4px solid #1A0606;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.8);
+}
 
 .platform {
     position: absolute;
@@ -160,4 +315,105 @@ html {
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
     animation: spin2D 1s linear infinite;
+}
+
+/* ===== PATROL ENEMY ===== */
+
+#patrol-enemy {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(145deg, #0D1E4A, #060E28);
+    border: 2px solid #8B0000;
+    box-shadow:
+        0 0 18px rgba(200, 0, 0, 0.65),
+        inset 0 0 10px rgba(180, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    z-index: 5;
+    animation: patrol-float 1.4s ease-in-out infinite;
+}
+
+.patrol-eye {
+    width: 10px;
+    height: 7px;
+    background: #FF1A1A;
+    box-shadow: 0 0 8px rgba(255, 26, 26, 0.95), 0 0 2px white;
+    clip-path: polygon(10% 100%, 50% 0%, 90% 100%); /* inverted triangle = angry brow shape */
+}
+
+@keyframes patrol-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    30%       { transform: translateY(-4px) rotate(1.5deg); }
+    70%       { transform: translateY(4px) rotate(-1.5deg); }
+}
+
+/* ===== PLAYER INVINCIBILITY ===== */
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.2; }
+}
+
+#player.invincible {
+    animation: blink 0.3s linear infinite;
+}
+
+/* ===== GAME OVER OVERLAY ===== */
+
+#game-over {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.78);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    color: white;
+    font-family: 'Figtree', monospace;
+    gap: 12px;
+}
+
+#game-over-title {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    margin: 0;
+    color: #FF4040;
+    text-shadow: 0 0 30px rgba(255, 60, 60, 0.6), 3px 3px 0 rgba(0, 0, 0, 0.5);
+}
+
+#final-score {
+    font-size: 1.3rem;
+    margin: 0;
+    color: gold;
+    font-weight: 700;
+}
+
+#restart-button {
+    margin-top: 8px;
+    padding: 12px 40px;
+    font-family: 'Figtree', monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #1a8aff, #0056cc);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 100, 255, 0.4);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    letter-spacing: 0.03em;
+}
+
+#restart-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0, 100, 255, 0.5);
+}
+
+#restart-button:focus {
+    outline: none;
 }
